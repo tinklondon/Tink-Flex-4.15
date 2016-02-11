@@ -150,38 +150,42 @@ package ws.tink.spark.layouts
 		//--------------------------------------------------------------------------
 		
 		//----------------------------------
-		//  allowDeselection
-		//---------------------------------- 
+		//  buttonBar
+		//----------------------------------    
 		
 		/**
-		 *  The storage property is in the NavigatorLayoutBase.
+		 *  @private
+		 *  Storage property for buttonBar.
 		 */
+		private var _buttonBar:ButtonBarBase;
 		
-		[Inspectable(category="General", enumeration="false,true", defaultValue="false")]
-		
-		/** 
-		 *  Indicates that the layout can have a <code>selectedIndex</code>
-		 *  and no <code>selectItem</code>
-		 *  
-		 *  @default false
-		 *  
-		 *  @langversion 3.0
-		 *  @playerversion Flash 10
-		 *  @playerversion AIR 1.5
-		 *  @productversion Flex 4
+		/**
+		 *  useScrollRect
+		 * 
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.5
+		 *  @productversion Flex 4
 		 */
-		public function get allowDeselection():Boolean
-		{ 
-			return _allowDeselection;
+		public function get buttonBar():ButtonBarBase
+		{
+			return _buttonBar;
 		}
 		/**
 		 *  @private
 		 */
-		public function set allowDeselection( value:Boolean ):void
+		public function set buttonBar( value:ButtonBarBase ):void
 		{
-			if (_allowDeselection == value)
-				return;
-			_allowDeselection = value;
+			if( _buttonBar == value ) return;
+			_buttonBar = value;
+			
+			if( _buttonBar )
+			{
+				_buttonBar.layout = _buttonLayout;
+				_buttonBar.requireSelection = requireSelection;
+				if( _buttonBar && target is ISelectableList ) _buttonBar.dataProvider = ISelectableList( target );
+				if( target ) target.invalidateSize();
+			}
 		}
 		
 		
@@ -462,41 +466,42 @@ package ws.tink.spark.layouts
 		
 		
 		//----------------------------------
-		//  buttonBar
-		//----------------------------------    
+		//  requireSelection
+		//---------------------------------- 
 		
 		/**
-		 *  @private
-		 *  Storage property for buttonBar.
+		 *  The storage property is in the NavigatorLayoutBase.
 		 */
-		private var _buttonBar:ButtonBarBase;
+		
+		[Inspectable(category="General", enumeration="false,true", defaultValue="true")]
 		
 		/**
-		 *  useScrollRect
-		 * 
-		 *  @langversion 3.0
-		 *  @playerversion Flash 10
-		 *  @playerversion AIR 1.5
-		 *  @productversion Flex 4
+		 *  If <code>true</code>, an item must always be selected in the layout.
+		 *  If the value is <code>true</code>, the <code>selectedIndex</code> property 
+		 *  is always set to a value between 0 and (<code>dataProvider.length</code> - 1).
+		 *
+		 *  @default true
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.5
+		 *  @productversion Flex 4
 		 */
-		public function get buttonBar():ButtonBarBase
-		{
-			return _buttonBar;
+		public function get requireSelection():Boolean
+		{ 
+			return _requireSelection;
 		}
 		/**
 		 *  @private
 		 */
-		public function set buttonBar( value:ButtonBarBase ):void
+		public function set requireSelection( value:Boolean ):void
 		{
-			if( _buttonBar == value ) return;
-			_buttonBar = value;
+			if ( _requireSelection == value )
+				return;
 			
+			_requireSelection = value;
 			if( _buttonBar )
-			{
-				_buttonBar.layout = _buttonLayout;
-				if( _buttonBar && target is ISelectableList ) _buttonBar.dataProvider = ISelectableList( target );
-				if( target ) target.invalidateSize();
-			}
+				_buttonBar.requireSelection = requireSelection;
 		}
 		
 		

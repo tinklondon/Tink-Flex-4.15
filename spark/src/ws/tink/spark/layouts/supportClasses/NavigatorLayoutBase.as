@@ -126,7 +126,7 @@ package ws.tink.spark.layouts.supportClasses
 		 *	Flag to indicate the layout can have no selected item.
 		 *  This can be updated in sub classes.
 		 */
-		protected var _allowDeselection:Boolean = false;
+		protected var _requireSelection:Boolean = true;
 		
 		/**
 		 *  @private
@@ -739,7 +739,7 @@ package ws.tink.spark.layouts.supportClasses
 				_proposedSelectedIndex = -1;
 //				_proposedSelectedIndexOffset = 0;
 			}
-			else if( !_allowDeselection && selectedIndex == -1 )
+			else if( _requireSelection && selectedIndex == -1 )
 			{
 				_selectedIndexInvalid = true;
 				_proposedSelectedIndex = 0;

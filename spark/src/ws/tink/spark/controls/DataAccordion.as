@@ -91,7 +91,7 @@ package ws.tink.spark.controls
 		/**
 		 *  @private
 		 */
-		private static const ALLOW_DESELECTION_PROPERTY_FLAG:uint = 1 << 0;
+		private static const REQUIRE_SELECTION_PROPERTY_FLAG:uint = 1 << 0;
 		
 		/**
 		 *  @private
@@ -229,47 +229,6 @@ package ws.tink.spark.controls
 		 *  have been explicitely set or not.
 		 */
 		private var _accordionLayoutProperties:Object = {};
-		
-		
-		//----------------------------------
-		//  allowDeselection
-		//---------------------------------- 
-		
-		/**
-		 *  The storage property is in the NavigatorLayoutBase.
-		 */
-		
-		[Inspectable(category="General", enumeration="false,true", defaultValue="false")]
-		
-		/** 
-		 *  @copy ws.tink.spark.layouts.AccordionLayout#allowDeselection
-		 *  
-		 *  @langversion 3.0
-		 *  @playerversion Flash 10
-		 *  @playerversion AIR 1.5
-		 *  @productversion Flex 4
-		 */
-		public function get allowDeselection():Boolean
-		{ 
-			return accordionLayout ? accordionLayout.allowDeselection : _accordionLayoutProperties.allowDeselection;
-		}
-		/**
-		 *  @private
-		 */
-		public function set allowDeselection( value:Boolean ):void
-		{
-			if( value == buttonRotation ) return;
-			
-			if( accordionLayout )
-			{
-				accordionLayout.allowDeselection = value;
-				_accordionLayoutProperties = BitFlagUtil.update( _accordionLayoutProperties as uint, ALLOW_DESELECTION_PROPERTY_FLAG, true );
-			}
-			else
-			{
-				_accordionLayoutProperties.allowDeselection = value;
-			}
-		}
 		
 		
 		//----------------------------------
@@ -423,6 +382,47 @@ package ws.tink.spark.controls
 			else
 			{
 				_accordionLayoutProperties.minElementSize = value;
+			}
+		}
+		
+		
+		//----------------------------------
+		//  requireSelection
+		//---------------------------------- 
+		
+		/**
+		 *  The storage property is in the NavigatorLayoutBase.
+		 */
+		
+		[Inspectable(category="General", enumeration="false,true", defaultValue="true")]
+		
+		/** 
+		 *  @copy ws.tink.spark.layouts.AccordionLayout#requireSelection
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.5
+		 *  @productversion Flex 4
+		 */
+		public function get requireSelection():Boolean
+		{ 
+			return accordionLayout ? accordionLayout.requireSelection : _accordionLayoutProperties.requireSelection;
+		}
+		/**
+		 *  @private
+		 */
+		public function set requireSelection( value:Boolean ):void
+		{
+			if( value == buttonRotation ) return;
+			
+			if( accordionLayout )
+			{
+				accordionLayout.requireSelection = value;
+				_accordionLayoutProperties = BitFlagUtil.update( _accordionLayoutProperties as uint, REQUIRE_SELECTION_PROPERTY_FLAG, true );
+			}
+			else
+			{
+				_accordionLayoutProperties.requireSelection = value;
 			}
 		}
 		

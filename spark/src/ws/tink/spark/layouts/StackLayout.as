@@ -201,29 +201,30 @@ package ws.tink.spark.layouts
 		
 		[Inspectable(category="General", enumeration="false,true", defaultValue="false")]
 		
-		/** 
-		 *  Indicates that the layout can have a <code>selectedIndex</code>
-		 *  and no <code>selectItem</code>
-		 *  
-		 *  @default false
+		/**
+		 *  If <code>true</code>, an item must always be selected in the layout.
+		 *  If the value is <code>true</code>, the <code>selectedIndex</code> property 
+		 *  is always set to a value between 0 and (<code>dataProvider.length</code> - 1).
+		 *
+		 *  @default true
 		 *  
 		 *  @langversion 3.0
 		 *  @playerversion Flash 10
 		 *  @playerversion AIR 1.5
 		 *  @productversion Flex 4
 		 */
-		public function get allowDeselection():Boolean
+		public function get requireSelection():Boolean
 		{ 
-			return _allowDeselection;
+			return _requireSelection;
 		}
 		/**
 		 *  @private
 		 */
-		public function set allowDeselection( value:Boolean ):void
+		public function set requireSelection( value:Boolean ):void
 		{
-			if (_allowDeselection == value)
+			if (_requireSelection == value)
 				return;
-			_allowDeselection = value;
+			_requireSelection = value;
 		}
 		
 		

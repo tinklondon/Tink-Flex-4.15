@@ -89,7 +89,7 @@ package ws.tink.spark.containers
 		/**
 		 *  @private
 		 */
-		private static const ALLOW_DESELECTION_PROPERTY_FLAG:uint = 1 << 0;
+		private static const REQUIRE_SELECTION_PROPERTY_FLAG:uint = 1 << 0;
 		
 		/**
 		 *  @private
@@ -222,47 +222,6 @@ package ws.tink.spark.containers
 		 *  have been explicitely set or not.
 		 */
 		private var _accordionLayoutProperties:Object = {};
-		
-		
-		//----------------------------------
-		//  allowDeselection
-		//---------------------------------- 
-		
-		/**
-		 *  The storage property is in the NavigatorLayoutBase.
-		 */
-		
-		[Inspectable(category="General", enumeration="false,true", defaultValue="false")]
-		
-		/** 
-		 *  @copy ws.tink.spark.layouts.AccordionLayout#allowDeselection
-		 *  
-		 *  @langversion 3.0
-		 *  @playerversion Flash 10
-		 *  @playerversion AIR 1.5
-		 *  @productversion Flex 4
-		 */
-		public function get allowDeselection():Boolean
-		{ 
-			return accordionLayout ? accordionLayout.allowDeselection : _accordionLayoutProperties.allowDeselection;
-		}
-		/**
-		 *  @private
-		 */
-		public function set allowDeselection( value:Boolean ):void
-		{
-			if( value == buttonRotation ) return;
-			
-			if( accordionLayout )
-			{
-				accordionLayout.allowDeselection = value;
-				_accordionLayoutProperties = BitFlagUtil.update( _accordionLayoutProperties as uint, ALLOW_DESELECTION_PROPERTY_FLAG, true );
-			}
-			else
-			{
-				_accordionLayoutProperties.allowDeselection = value;
-			}
-		}
 		
 		
 		//----------------------------------
@@ -416,6 +375,47 @@ package ws.tink.spark.containers
 			else
 			{
 				_accordionLayoutProperties.minElementSize = value;
+			}
+		}
+		
+		
+		//----------------------------------
+		//  requireSelection
+		//---------------------------------- 
+		
+		/**
+		 *  The storage property is in the NavigatorLayoutBase.
+		 */
+		
+		[Inspectable(category="General", enumeration="false,true", defaultValue="true")]
+		
+		/** 
+		 *  @copy ws.tink.spark.layouts.AccordionLayout#requireSelection
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.5
+		 *  @productversion Flex 4
+		 */
+		public function get requireSelection():Boolean
+		{ 
+			return accordionLayout ? accordionLayout.requireSelection : _accordionLayoutProperties.requireSelection;
+		}
+		/**
+		 *  @private
+		 */
+		public function set requireSelection( value:Boolean ):void
+		{
+			if( value == buttonRotation ) return;
+			
+			if( accordionLayout )
+			{
+				accordionLayout.requireSelection = value;
+				_accordionLayoutProperties = BitFlagUtil.update( _accordionLayoutProperties as uint, REQUIRE_SELECTION_PROPERTY_FLAG, true );
+			}
+			else
+			{
+				_accordionLayoutProperties.requireSelection = value;
 			}
 		}
 		
@@ -603,9 +603,9 @@ package ws.tink.spark.containers
 					// copy proxied values from _accordionLayoutProperties (if set) to accordionLayout
 					var newAccordionLayoutProperties:uint = 0;
 					
-					if( _accordionLayoutProperties.allowDeselection !== undefined )
+					if( _accordionLayoutProperties.requireSelection !== undefined )
 					{
-						accordionLayout.allowDeselection = _accordionLayoutProperties.allowDeselection;
+						accordionLayout.requireSelection = _accordionLayoutProperties.requireSelection;
 						newAccordionLayoutProperties = BitFlagUtil.update( newAccordionLayoutProperties as uint, BUTTON_ROTATION_PROPERTY_FLAG, true );
 					}
 					
@@ -683,8 +683,8 @@ package ws.tink.spark.containers
 					// copy proxied values from accordionLayout (if explicitly set) to _accordionLayoutProperties
 					var newAccordionLayoutProperties:Object = {};
 					
-					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, ALLOW_DESELECTION_PROPERTY_FLAG ) )
-						newAccordionLayoutProperties.allowDeselection = accordionLayout.allowDeselection;
+					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, REQUIRE_SELECTION_PROPERTY_FLAG ) )
+						newAccordionLayoutProperties.requireSelection = accordionLayout.requireSelection;
 					
 					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, BUTTON_ROTATION_PROPERTY_FLAG ) )
 						newAccordionLayoutProperties.buttonRotation = accordionLayout.buttonRotation;
