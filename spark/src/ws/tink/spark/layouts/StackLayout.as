@@ -199,6 +199,8 @@ package ws.tink.spark.layouts
 		 *  The storage property is in the NavigatorLayoutBase.
 		 */
 		
+		[Inspectable(category="General", enumeration="false,true", defaultValue="false")]
+		
 		/** 
 		 *  Indicates that the layout can have a <code>selectedIndex</code>
 		 *  and no <code>selectItem</code>
