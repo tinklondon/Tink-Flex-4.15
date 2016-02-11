@@ -408,10 +408,11 @@ package ws.tink.spark.layouts
 			{
 				if( effect && _bitmapFrom )
 				{
-					// I want to to show here, hide the current view.
-					target.validateNow();
+					// Validate the selectedElement before drowing.
+					if( _selectedElement is IInvalidating )
+						IInvalidating( _selectedElement ).validateNow();
 					
-					_bitmapTo = new BitmapData( unscaledWidth, unscaledHeight, true, 0x00ffffff );//BitmapUtil.getSnapshot(IUIComponent(target));
+					_bitmapTo = new BitmapData( unscaledWidth, unscaledHeight, true, 0x00ffffff );
 					_bitmapTo.draw( target );
 					
 					Object( effect ).bitmapTo = _bitmapTo;
