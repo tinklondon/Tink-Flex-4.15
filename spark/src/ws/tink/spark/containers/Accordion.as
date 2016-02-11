@@ -89,32 +89,37 @@ package ws.tink.spark.containers
 		/**
 		 *  @private
 		 */
-		private static const BUTTON_ROTATION_PROPERTY_FLAG:uint = 1 << 0;
+		private static const ALLOW_DESELECTION_PROPERTY_FLAG:uint = 1 << 0;
 		
 		/**
 		 *  @private
 		 */
-		private static const DIRECTION_PROPERTY_FLAG:uint = 1 << 1;
+		private static const BUTTON_ROTATION_PROPERTY_FLAG:uint = 1 << 1;
 		
 		/**
 		 *  @private
 		 */
-		private static const DURATION_PROPERTY_FLAG:uint = 1 << 2;
+		private static const DIRECTION_PROPERTY_FLAG:uint = 1 << 2;
 		
 		/**
 		 *  @private
 		 */
-		private static const EASER_PROPERTY_FLAG:uint = 1 << 3;
+		private static const DURATION_PROPERTY_FLAG:uint = 1 << 3;
 		
 		/**
 		 *  @private
 		 */
-		private static const MIN_ELEMENT_SIZE_PROPERTY_FLAG:uint = 1 << 4;
+		private static const EASER_PROPERTY_FLAG:uint = 1 << 4;
 		
 		/**
 		 *  @private
 		 */
-		private static const USE_SCROLL_RECT_PROPERTY_FLAG:uint = 1 << 5;
+		private static const MIN_ELEMENT_SIZE_PROPERTY_FLAG:uint = 1 << 5;
+		
+		/**
+		 *  @private
+		 */
+		private static const USE_SCROLL_RECT_PROPERTY_FLAG:uint = 1 << 6;
 		
 		
 		// Constants used for buttonBar proxied properties.
@@ -217,6 +222,47 @@ package ws.tink.spark.containers
 		 *  have been explicitely set or not.
 		 */
 		private var _accordionLayoutProperties:Object = {};
+		
+		
+		//----------------------------------
+		//  allowDeselection
+		//---------------------------------- 
+		
+		/**
+		 *  The storage property is in the NavigatorLayoutBase.
+		 */
+		
+		[Inspectable(category="General", enumeration="false,true", defaultValue="false")]
+		
+		/** 
+		 *  @copy ws.tink.spark.layouts.AccordionLayout#allowDeselection
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.5
+		 *  @productversion Flex 4
+		 */
+		public function get allowDeselection():Boolean
+		{ 
+			return accordionLayout ? accordionLayout.allowDeselection : _accordionLayoutProperties.allowDeselection;
+		}
+		/**
+		 *  @private
+		 */
+		public function set allowDeselection( value:Boolean ):void
+		{
+			if( value == buttonRotation ) return;
+			
+			if( accordionLayout )
+			{
+				accordionLayout.allowDeselection = value;
+				_accordionLayoutProperties = BitFlagUtil.update( _accordionLayoutProperties as uint, ALLOW_DESELECTION_PROPERTY_FLAG, true );
+			}
+			else
+			{
+				_accordionLayoutProperties.allowDeselection = value;
+			}
+		}
 		
 		
 		//----------------------------------
@@ -557,6 +603,12 @@ package ws.tink.spark.containers
 					// copy proxied values from _accordionLayoutProperties (if set) to accordionLayout
 					var newAccordionLayoutProperties:uint = 0;
 					
+					if( _accordionLayoutProperties.allowDeselection !== undefined )
+					{
+						accordionLayout.allowDeselection = _accordionLayoutProperties.allowDeselection;
+						newAccordionLayoutProperties = BitFlagUtil.update( newAccordionLayoutProperties as uint, BUTTON_ROTATION_PROPERTY_FLAG, true );
+					}
+					
 					if( _accordionLayoutProperties.buttonRotation !== undefined )
 					{
 						accordionLayout.buttonRotation = _accordionLayoutProperties.buttonRotation;
@@ -630,6 +682,9 @@ package ws.tink.spark.containers
 				{
 					// copy proxied values from accordionLayout (if explicitly set) to _accordionLayoutProperties
 					var newAccordionLayoutProperties:Object = {};
+					
+					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, ALLOW_DESELECTION_PROPERTY_FLAG ) )
+						newAccordionLayoutProperties.allowDeselection = accordionLayout.allowDeselection;
 					
 					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, BUTTON_ROTATION_PROPERTY_FLAG ) )
 						newAccordionLayoutProperties.buttonRotation = accordionLayout.buttonRotation;
