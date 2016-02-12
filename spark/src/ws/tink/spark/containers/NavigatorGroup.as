@@ -296,8 +296,6 @@ package ws.tink.spark.containers
 		{
 			super.mxmlContent = value;
 			
-			adjustSelection( length ? 0 : -1 );
-			
 			dispatchEvent( new CollectionEvent( CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET, -1, -1, toArray() ) );
 		}
 		
@@ -629,7 +627,6 @@ package ws.tink.spark.containers
 				}
 				case CollectionEventKind.RESET :
 				{
-					adjustSelection( length ? 0 : -1 );
 					break;
 				}
 			}
