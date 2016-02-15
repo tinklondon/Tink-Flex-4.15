@@ -1,5 +1,7 @@
 package ws.tink.spark.layouts.supportClasses
 {
+	import mx.events.Request;
+	
 	import spark.effects.animation.Animation;
 	import spark.effects.animation.MotionPath;
 	import spark.effects.animation.SimpleMotionPath;
@@ -427,7 +429,7 @@ package ws.tink.spark.layouts.supportClasses
 //			_proposedSelectedIndex2 = index;
 //			_proposedSelectedIndex2Offset = offset;
 			
-			if( prevIndex == -1 || !duration || isNaN( duration ) || index == -1 || prevIndex == index )
+			if( _requireSelection && ( prevIndex == -1 || !duration || isNaN( duration ) || index == -1 || prevIndex == index ) )
 			{
 //				super.invalidateSelectedIndex( index, 0 );
 			}

@@ -873,9 +873,9 @@ package ws.tink.spark.layouts
 		}
 		
 		
-		private function update( e:ElementSize, selectedSize:Number, creatingAll:Boolean ):void
+		private function update( e:ElementSize, selectedSize:Number, initializeAtSize:Boolean ):void
 		{
-			if( creatingAll )
+			if( initializeAtSize )
 			{
 				e.size = e.layoutIndex == selectedIndex ? selectedSize : minElementSize;
 				e.start = e.size;
@@ -975,7 +975,7 @@ package ws.tink.spark.layouts
 						// its start size is bigger than 0, or its diff in size is bigger than 0.
 						if( elementSize.displayListIndex == selectedIndex || elementSize.start || elementSize.diff ) elementSize.element = target.getVirtualElementAt( elementSize.displayListIndex );
 						
-						update( elementSize, selectedSize, creatingAll );
+						update( elementSize, selectedSize, creatingAll && _requireSelection );
 					}
 				}
 				
@@ -1000,7 +1000,7 @@ package ws.tink.spark.layouts
 					
 					_elementSizes.push( elementSize );
 					
-					update( elementSize, selectedSize, creatingAll );
+					update( elementSize, selectedSize, creatingAll && _requireSelection );
 				}
 				
 				// If we've added items we now need to do a sort.
@@ -1067,7 +1067,7 @@ package ws.tink.spark.layouts
 						if( indicesRequiredIndex != -1 ) indicesRequired.splice( indicesRequiredIndex, 1 )
 						elementSize.element = target.getElementAt( elementSize.displayListIndex );
 						
-						update( elementSize, selectedSize, creatingAll );
+						update( elementSize, selectedSize, creatingAll && _requireSelection );
 					}
 				}
 				
@@ -1086,7 +1086,7 @@ package ws.tink.spark.layouts
 					
 					_elementSizes.push( elementSize );
 					
-					update( elementSize, selectedSize, creatingAll );
+					update( elementSize, selectedSize, creatingAll && _requireSelection );
 				}
 				
 				// If we've added items we now need to do a sort.
