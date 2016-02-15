@@ -682,7 +682,6 @@ package ws.tink.spark.layouts.supportClasses
 		//
 		//--------------------------------------------------------------------------
 		
-		
 		override public function measure():void
 		{
 			updateElements();
