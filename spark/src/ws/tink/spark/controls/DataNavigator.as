@@ -867,8 +867,6 @@ package ws.tink.spark.controls
 			
 			if( value && useVirtualLayout) value.useVirtualLayout = true;
 			
-			removeLayoutListeners();
-			
 			if( value is INavigatorLayout )
 			{
 				if (contentGroup)
@@ -881,8 +879,6 @@ package ws.tink.spark.controls
 				{
 					dataGroupProperties.layout = value;
 				}
-				
-				addLayoutListeners();
 			}
 			else
 			{
@@ -1138,26 +1134,6 @@ package ws.tink.spark.controls
 			if( anl ) anl.duration = duration;
 		}
 		
-		/**
-		 *  @private
-		 */
-		protected function addLayoutListeners():void
-		{
-			if( !layout ) return;
-			layout.addEventListener( IndexChangeEvent.CHANGE, onLayoutEvent, false, 0, true );
-			layout.addEventListener( FlexEvent.VALUE_COMMIT, onLayoutEvent, false, 0, true );
-		}
-		
-		/**
-		 *  @private
-		 */
-		protected function removeLayoutListeners():void
-		{
-			if( !layout ) return;
-			layout.removeEventListener( IndexChangeEvent.CHANGE, onLayoutEvent, false );
-			layout.removeEventListener( FlexEvent.VALUE_COMMIT, onLayoutEvent, false );
-		}
-		
 		
 		
 		//--------------------------------------------------------------------------
@@ -1250,6 +1226,9 @@ package ws.tink.spark.controls
 					contentGroup.addEventListener(
 						RendererExistenceEvent.RENDERER_REMOVE, dispatchEvent);
 				}
+				
+				contentGroup.addEventListener( FlexEvent.VALUE_COMMIT, dispatchEvent, false, 0, true );
+				contentGroup.addEventListener( IndexChangeEvent.CHANGE, dispatchEvent, false, 0, true );
 			}
 		}
 		
@@ -1293,6 +1272,9 @@ package ws.tink.spark.controls
 					newDataGroupProperties.selectedIndex = contentGroup.selectedIndex;
 				
 				dataGroupProperties = newDataGroupProperties;
+				
+				contentGroup.removeEventListener( FlexEvent.VALUE_COMMIT, dispatchEvent, false );
+				contentGroup.removeEventListener( IndexChangeEvent.CHANGE, dispatchEvent, false );
 				
 				contentGroup.dataProvider = null;
 				contentGroup.layout = null;
