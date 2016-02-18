@@ -28,8 +28,6 @@ package ws.tink.spark.controls
 	
 	import ws.tink.spark.layouts.AccordionLayout;
 	
-	import mx.utils.BitFlagUtil;
-	
 
 	
 	/**
@@ -563,6 +561,19 @@ package ws.tink.spark.controls
 		//----------------------------------    
 		
 		/**
+		 *  @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.5
+		 *  @productversion Flex 4
+		 */
+		override public function get layout():LayoutBase
+		{
+			return accordionLayout;
+		}
+		
+		/**
 		 *  @private
 		 */
 		override public function set layout( value:LayoutBase ):void
@@ -647,8 +658,6 @@ package ws.tink.spark.controls
 					
 					_accordionLayoutProperties = newAccordionLayoutProperties;
 					
-					addLayoutListeners();
-					
 					if( buttonBar ) accordionLayout.buttonBar = buttonBar;
 					break;
 				}
@@ -721,8 +730,6 @@ package ws.tink.spark.controls
 						newAccordionLayoutProperties.useVirtualLayout = accordionLayout.useVirtualLayout;
 					
 					_accordionLayoutProperties = newAccordionLayoutProperties;
-					
-					removeLayoutListeners();
 					break;
 				}
 				case buttonBar :
