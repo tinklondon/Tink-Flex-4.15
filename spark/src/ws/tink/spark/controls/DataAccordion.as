@@ -627,6 +627,12 @@ package ws.tink.spark.controls
 						newAccordionLayoutProperties = BitFlagUtil.update( newAccordionLayoutProperties as uint, MIN_ELEMENT_SIZE_PROPERTY_FLAG, true );
 					}
 					
+					if( _accordionLayoutProperties.requireSelection !== undefined )
+					{
+						accordionLayout.requireSelection = _accordionLayoutProperties.requireSelection;
+						newAccordionLayoutProperties = BitFlagUtil.update( newAccordionLayoutProperties as uint, REQUIRE_SELECTION_PROPERTY_FLAG, true );
+					}
+					
 					if( _accordionLayoutProperties.useScrollRect !== undefined )
 					{
 						accordionLayout.useScrollRect = _accordionLayoutProperties.useScrollRect;
@@ -640,6 +646,8 @@ package ws.tink.spark.controls
 					}
 					
 					_accordionLayoutProperties = newAccordionLayoutProperties;
+					
+					addLayoutListeners();
 					
 					if( buttonBar ) accordionLayout.buttonBar = buttonBar;
 					break;
@@ -703,6 +711,9 @@ package ws.tink.spark.controls
 					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, MIN_ELEMENT_SIZE_PROPERTY_FLAG ) )
 						newAccordionLayoutProperties.minElementSize = accordionLayout.minElementSize;
 					
+					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, REQUIRE_SELECTION_PROPERTY_FLAG ) )
+						newAccordionLayoutProperties.requireSelection = accordionLayout.requireSelection;
+					
 					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, USE_SCROLL_RECT_PROPERTY_FLAG ) )
 						newAccordionLayoutProperties.useScrollRect = accordionLayout.useScrollRect;
 					
@@ -710,6 +721,8 @@ package ws.tink.spark.controls
 						newAccordionLayoutProperties.useVirtualLayout = accordionLayout.useVirtualLayout;
 					
 					_accordionLayoutProperties = newAccordionLayoutProperties;
+					
+					removeLayoutListeners();
 					break;
 				}
 				case buttonBar :

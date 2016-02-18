@@ -336,7 +336,7 @@ package ws.tink.spark.layouts.supportClasses
 		/**
 		 *  @private
 		 */
-		private var _programmaticSelectedIndex:int;
+		private var _programmaticSelectedIndex:int = -2;
 		
 		[Bindable( event="change" )]
 		[Bindable( event="valueCommit" )]

@@ -663,7 +663,7 @@ package ws.tink.spark.controls
 					}
 					case CollectionEventKind.RESET :
 					{
-						adjustSelection( length ? 0 : -1 );
+//						adjustSelection( length ? 0 : -1 );
 						break;
 					}
 					case CollectionEventKind.MOVE :

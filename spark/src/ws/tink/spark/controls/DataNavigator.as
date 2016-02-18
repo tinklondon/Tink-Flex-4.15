@@ -1141,7 +1141,7 @@ package ws.tink.spark.controls
 		/**
 		 *  @private
 		 */
-		private function addLayoutListeners():void
+		protected function addLayoutListeners():void
 		{
 			if( !layout ) return;
 			layout.addEventListener( IndexChangeEvent.CHANGE, onLayoutEvent, false, 0, true );
@@ -1151,7 +1151,7 @@ package ws.tink.spark.controls
 		/**
 		 *  @private
 		 */
-		private function removeLayoutListeners():void
+		protected function removeLayoutListeners():void
 		{
 			if( !layout ) return;
 			layout.removeEventListener( IndexChangeEvent.CHANGE, onLayoutEvent, false );
