@@ -810,14 +810,8 @@ package ws.tink.spark.containers
 			else
 				_mxmlContent = value;
 			
-//			trace( "111", _contentModified );
-//			var c:NavigatorGroup = currentContentGroup;
-//			trace( "huh", c );
-//			c.mxmlContent = value;
-//			trace( "222", _contentModified )
 			if (value != null)
 				_contentModified = true;
-//			_mxmlContent = value;
 		}
 		
 		//----------------------------------
