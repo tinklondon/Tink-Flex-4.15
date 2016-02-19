@@ -107,10 +107,6 @@ package ws.tink.spark.layouts.supportClasses
 		{
 			super();
 			
-//			useVirtualLayout = true;
-			
-			useScrollBarForNavigation = true;
-			
 			_scrollBarDirection = LayoutAxis.VERTICAL;
 		}	
 		
@@ -384,7 +380,7 @@ package ws.tink.spark.layouts.supportClasses
 		 */
 		private var _useScrollBarForNavigation:Boolean;
 		
-		[Inspectable(category="General", enumeration="false,true", defaultValue="true")]
+		[Inspectable(category="General", enumeration="false,true", defaultValue="false")]
 		/**
 		 *  useScrollBarForNavigation
 		 *  

@@ -674,8 +674,10 @@ package ws.tink.spark.layouts
 			}
 			else if( selectedIndex != -1 )
 			{
+				var elt:IVisualElement = target.getElementAt( indicesInLayout[ selectedIndex ] );
 				// If we are using a virtual layout, cache the size of the selected item.
-				_measuredCache.cache( target.getElementAt( indicesInLayout[ selectedIndex ] ) );
+				if( elt )
+					_measuredCache.cache( elt );
 			}
 			
 			const prevButtonSize:Number = _buttonLayout._totalSize;
@@ -842,7 +844,6 @@ package ws.tink.spark.layouts
 						if( _useScrollRect && elementSize.element is DisplayObject )
 						{
 							DisplayObject( elementSize.element ).scrollRect = new Rectangle( 0, 0, unscaledWidth, elementSize.size );
-							
 							elementSize.element.setLayoutBoundsSize( unscaledWidth, unscaledHeight - _buttonLayout._totalSize );
 						}
 						else
