@@ -844,9 +844,9 @@ package ws.tink.spark.layouts.supportClasses
 				else
 				{
 					elts = new Array();
-					for( var i:int = 0; i < dataGroup.numChildren; i++ )
+					for( var i:int = 0; i < dataGroup.numElements; i++ )
 					{
-						elts.push( dataGroup.getChildAt( i ) );
+						elts.push( dataGroup.getElementAt( i ) );
 					}
 				}
 			}

@@ -19,6 +19,7 @@ SOFTWARE.
 package ws.tink.spark.layouts
 {
 	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	
@@ -506,37 +507,37 @@ package ws.tink.spark.layouts
 		
 		
 		//----------------------------------
-		//  useScrollRect
+		//  useMasking
 		//----------------------------------    
 		
 		/**
 		 *  @private
-		 *  Storage property for useScrollRect.
+		 *  Storage property for useMasking.
 		 */
-		private var _useScrollRect:Boolean = true;
+		private var _useMasking:Boolean;
 		
 		/**
-		 *  useScrollRect
+		 *  useMasking
 		 * 
-		 *  @default true
+		 *  @default false
 		 *
 		 *  @langversion 3.0
 		 *  @playerversion Flash 10
 		 *  @playerversion AIR 1.5
 		 *  @productversion Flex 4
 		 */
-		public function get useScrollRect():Boolean
+		public function get useMasking():Boolean
 		{
-			return _useScrollRect;
+			return _useMasking;
 		}
 		/**
 		 *  @private
 		 */
-		public function set useScrollRect( value:Boolean ):void
+		public function set useMasking( value:Boolean ):void
 		{
-			if( _useScrollRect == value ) return;
+			if( _useMasking == value ) return;
 			
-			_useScrollRect = value;
+			_useMasking = value;
 		}
 		
 		
@@ -780,7 +781,7 @@ package ws.tink.spark.layouts
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList( unscaledWidth, unscaledHeight );
-			
+			trace( unscaledWidth, target.width );
 			_elementSizesInvalid = false;
 			updateDisplayListElements();
 		}
@@ -804,6 +805,8 @@ package ws.tink.spark.layouts
 			_measuredCache.reset();
 		}
 		
+		private var _mask:Sprite;
+		
 		
 		
 		/**
@@ -817,6 +820,23 @@ package ws.tink.spark.layouts
 			var elementPos:Number = 0;
 			const offsetMultiplier:Number = 1 - animationValue;
 			const numElements:int = _elementSizes.length;
+			
+			if( useMasking  )
+			{
+				if( !_mask )
+				{
+					_mask = new Sprite();
+					target.mask = _mask;
+				}
+				
+				_mask.graphics.clear();
+			}
+			else if( target.mask != null &&
+				target.mask == _mask )
+			{
+				target.mask = null;
+			}
+			
 			for( var i:int = 0; i < numElements; i++ )
 			{
 				if( _buttonLayout._buttonSizes.length > i )
@@ -837,13 +857,15 @@ package ws.tink.spark.layouts
 				prevSize = elementSize.size;
 				elementSize.size = elementSize.start + ( elementSize.diff * offsetMultiplier );
 				
-				if( elementSize.elementChanged )
+				if( elementSize.element )
 				{
 					if( direction == LayoutAxis.VERTICAL )
 					{
-						if( _useScrollRect && elementSize.element is DisplayObject )
+						if( _useMasking )
 						{
-							DisplayObject( elementSize.element ).scrollRect = new Rectangle( 0, 0, unscaledWidth, elementSize.size );
+							_mask.graphics.beginFill( 0x000000, 1 );
+							_mask.graphics.drawRect( 0, elementPos, unscaledWidth, elementSize.size );
+							_mask.graphics.endFill();
 							elementSize.element.setLayoutBoundsSize( unscaledWidth, unscaledHeight - _buttonLayout._totalSize );
 						}
 						else
@@ -855,10 +877,12 @@ package ws.tink.spark.layouts
 					}
 					else
 					{
-						if( _useScrollRect && elementSize.element is DisplayObject )
+						if( _useMasking )
 						{
-							DisplayObject( elementSize.element ).scrollRect = new Rectangle( 0, 0, elementSize.size, unscaledHeight );
-							elementSize.element.setLayoutBoundsSize( unscaledWidth - _buttonLayout._totalSize, unscaledHeight );
+							_mask.graphics.beginFill( 0x000000, 1 );
+							_mask.graphics.drawRect( elementPos, 0, elementSize.size, unscaledHeight );
+							_mask.graphics.endFill();
+							elementSize.element.setLayoutBoundsSize( unscaledWidth, unscaledHeight - _buttonLayout._totalSize );
 						}
 						else
 						{
@@ -878,7 +902,7 @@ package ws.tink.spark.layouts
 		{
 			if( initializeAtSize )
 			{
-				e.size = e.layoutIndex == selectedIndex ? selectedSize : minElementSize;
+				e.size = e.layoutIndex == selectedIndex ? selectedSize : minElementSize
 				e.start = e.size;
 			}
 			else
@@ -887,9 +911,6 @@ package ws.tink.spark.layouts
 				e.diff = e.layoutIndex == selectedIndex ? selectedSize - e.start : minElementSize - e.start;
 			}
 		}
-		
-		
-		
 		
 		/**
 		 *  @inheritDoc
@@ -974,7 +995,14 @@ package ws.tink.spark.layouts
 						
 						// Only get the virtual element if it is the selectedIndex,
 						// its start size is bigger than 0, or its diff in size is bigger than 0.
-						if( elementSize.displayListIndex == selectedIndex || elementSize.start || elementSize.diff ) elementSize.element = target.getVirtualElementAt( elementSize.displayListIndex );
+						if( elementSize.displayListIndex == selectedIndex || elementSize.start || elementSize.diff )
+						{
+							elementSize.element = target.getVirtualElementAt( elementSize.displayListIndex );
+						}
+						else
+						{
+							elementSize.element = null;
+						}
 						
 						update( elementSize, selectedSize, creatingAll && _requireSelection );
 					}
@@ -1180,7 +1208,6 @@ internal class ElementSize
 		if( _element == value ) return;
 		
 		_element = value;
-		if( _element ) _elementChanged = true;
 	}
 	
 	private var _size:Number;
@@ -1191,16 +1218,7 @@ internal class ElementSize
 	public function set size( value:Number ):void
 	{
 		if( _size == value ) return;
-		
-		if( ( _size + value > 0 ) && _element ) _elementChanged = true;
 		_size = value;
-		//		if( _size ) _elementChanged = true;
-	}
-	
-	private var _elementChanged:Boolean;
-	public function get elementChanged():Boolean
-	{
-		return _elementChanged;
 	}
 }
 

@@ -57,7 +57,7 @@ package ws.tink.spark.containers
 	 *    labelField="label"
 	 *    labelFunction="null"
 	 *    minElementSize="0"
-	 *    useScrollRect"true"
+	 *    useMasking"true"
 	 *  
 	 *    <strong>Styles</strong>
 	 *    <strong>Events</strong>
@@ -119,7 +119,7 @@ package ws.tink.spark.containers
 		/**
 		 *  @private
 		 */
-		private static const USE_SCROLL_RECT_PROPERTY_FLAG:uint = 1 << 6;
+		private static const USE_MASKING_PROPERTY_FLAG:uint = 1 << 6;
 		
 		
 		// Constants used for buttonBar proxied properties.
@@ -421,31 +421,31 @@ package ws.tink.spark.containers
 		
 		
 		//----------------------------------
-		//  useScrollRect
+		//  useMasking
 		//----------------------------------    
 		
 		/**
-		 *  @copy ws.tink.spark.layouts.AccordionLayout#useScrollRect
+		 *  @copy ws.tink.spark.layouts.AccordionLayout#useMasking
 		 */
-		public function get useScrollRect():Boolean
+		public function get useMasking():Boolean
 		{
-			return accordionLayout ? accordionLayout.useScrollRect : _accordionLayoutProperties.useScrollRect;
+			return accordionLayout ? accordionLayout.useMasking : _accordionLayoutProperties.useMasking;
 		}
 		/**
 		 *  @private
 		 */
-		public function set useScrollRect( value:Boolean ):void
+		public function set useMasking( value:Boolean ):void
 		{
-			if( useScrollRect == value ) return;
+			if( useMasking == value ) return;
 			
 			if( accordionLayout )
 			{
-				accordionLayout.useScrollRect = value;
-				_accordionLayoutProperties = BitFlagUtil.update( _accordionLayoutProperties as uint, USE_SCROLL_RECT_PROPERTY_FLAG, true );
+				accordionLayout.useMasking = value;
+				_accordionLayoutProperties = BitFlagUtil.update( _accordionLayoutProperties as uint, USE_MASKING_PROPERTY_FLAG, true );
 			}
 			else
 			{
-				_accordionLayoutProperties.useScrollRect = value;
+				_accordionLayoutProperties.useMasking = value;
 			}
 		}
 		
@@ -639,10 +639,10 @@ package ws.tink.spark.containers
 						newAccordionLayoutProperties = BitFlagUtil.update( newAccordionLayoutProperties as uint, MIN_ELEMENT_SIZE_PROPERTY_FLAG, true );
 					}
 					
-					if( _accordionLayoutProperties.useScrollRect !== undefined )
+					if( _accordionLayoutProperties.useMasking !== undefined )
 					{
-						accordionLayout.useScrollRect = _accordionLayoutProperties.useScrollRect;
-						newAccordionLayoutProperties = BitFlagUtil.update( newAccordionLayoutProperties as uint, USE_SCROLL_RECT_PROPERTY_FLAG, true );
+						accordionLayout.useMasking = _accordionLayoutProperties.useMasking;
+						newAccordionLayoutProperties = BitFlagUtil.update( newAccordionLayoutProperties as uint, USE_MASKING_PROPERTY_FLAG, true );
 					}
 					
 					_accordionLayoutProperties = newAccordionLayoutProperties;
@@ -701,8 +701,8 @@ package ws.tink.spark.containers
 					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, MIN_ELEMENT_SIZE_PROPERTY_FLAG ) )
 						newAccordionLayoutProperties.minElementSize = accordionLayout.minElementSize;
 					
-					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, USE_SCROLL_RECT_PROPERTY_FLAG ) )
-						newAccordionLayoutProperties.useScrollRect = accordionLayout.useScrollRect;
+					if ( BitFlagUtil.isSet( _accordionLayoutProperties as uint, USE_MASKING_PROPERTY_FLAG ) )
+						newAccordionLayoutProperties.useMasking = accordionLayout.useMasking;
 					
 					_accordionLayoutProperties = newAccordionLayoutProperties;
 					break;
