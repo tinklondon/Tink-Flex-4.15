@@ -665,7 +665,17 @@ package ws.tink.spark.layouts
 			
 			if( effect && !isNaN( unscaledWidth ) && !isNaN( unscaledHeight ) )
 			{
-				const bitmapFrom:BitmapData = new BitmapData( unscaledWidth, unscaledHeight, true, 0x00000000 );
+				var bitmapFrom:BitmapData;
+				
+				if( isNaN( unscaledWidth ) || isNaN( unscaledHeight ) ||
+					unscaledWidth == 0 || unscaledHeight == 0 )
+				{
+					bitmapFrom = new BitmapData( 100, 100, true, 0x00000000 );
+				}
+				else
+				{
+					bitmapFrom = new BitmapData( unscaledWidth, unscaledHeight, true, 0x00000000 );
+				}
 				
 				try
 				{
@@ -676,6 +686,9 @@ package ws.tink.spark.layouts
 					}
 					else
 					{
+						// Validate the old selectedElement before drowing.
+						if( _selectedElement is IInvalidating )
+							IInvalidating( _selectedElement ).validateNow();
 						bitmapFrom.draw( target );
 					}
 				}
