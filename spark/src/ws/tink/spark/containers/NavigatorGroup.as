@@ -24,6 +24,7 @@ package ws.tink.spark.containers
 	
 	import mx.core.ISelectableList;
 	import mx.core.IVisualElement;
+	import mx.core.IVisualElementContainer;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	import mx.events.FlexEvent;
@@ -121,7 +122,7 @@ package ws.tink.spark.containers
 	 *  @playerversion AIR 1.5
 	 *  @productversion Flex 4
 	 */
-	public class NavigatorGroup extends DeferredGroup implements ISelectableList
+	public class NavigatorGroup extends DeferredGroup implements ISelectableList, IVisualElementContainer
 	{
 		
 		
@@ -369,7 +370,7 @@ package ws.tink.spark.containers
 		 */
 		public function getItemAt( index:int, prefetch:int = 0 ):Object
 		{
-			return  _mxmlContent[ index ];
+			return _mxmlContent[ index ];
 		}
 		
 		/**
@@ -521,6 +522,19 @@ package ws.tink.spark.containers
 			}
 			
 			return result;
+		}
+		
+		/**
+		 *  @inheritDoc
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 1.5
+		 *  @productversion Flex 4
+		 */
+		public function swapElements( element1:IVisualElement, element2:IVisualElement ):void
+		{
+			swapElementsAt( getElementIndex( element1 ), getElementIndex( element2 ) );
 		}
 		
 		/**
