@@ -1174,6 +1174,7 @@ import mx.core.IVisualElement;
 import spark.components.supportClasses.GroupBase;
 import spark.layouts.supportClasses.LayoutBase;
 
+import ws.tink.spark.layouts.AccordionLayout;
 import ws.tink.spark.layouts.supportClasses.LayoutAxis;
 
 
