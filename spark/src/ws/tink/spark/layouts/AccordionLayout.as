@@ -21,7 +21,6 @@ package ws.tink.spark.layouts
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
 	
 	import mx.core.ILayoutElement;
 	import mx.core.ISelectableList;
@@ -781,7 +780,7 @@ package ws.tink.spark.layouts
 		override public function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
 		{
 			super.updateDisplayList( unscaledWidth, unscaledHeight );
-			trace( unscaledWidth, target.width );
+
 			_elementSizesInvalid = false;
 			updateDisplayListElements();
 		}
@@ -1175,7 +1174,6 @@ import mx.core.IVisualElement;
 import spark.components.supportClasses.GroupBase;
 import spark.layouts.supportClasses.LayoutBase;
 
-import ws.tink.spark.layouts.AccordionLayout;
 import ws.tink.spark.layouts.supportClasses.LayoutAxis;
 
 
