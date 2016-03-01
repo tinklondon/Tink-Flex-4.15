@@ -663,7 +663,7 @@ package ws.tink.spark.layouts
 		{
 			if( selectedIndex == index ) return;
 			
-			if( effect && !isNaN( unscaledWidth ) && !isNaN( unscaledHeight ) )
+			if( effect )
 			{
 				var bitmapFrom:BitmapData;
 				
