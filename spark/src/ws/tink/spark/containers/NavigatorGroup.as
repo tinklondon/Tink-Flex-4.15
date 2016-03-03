@@ -21,10 +21,12 @@ SOFTWARE.
 package ws.tink.spark.containers
 {
 	import flash.events.Event;
+	import flash.events.IEventDispatcher;
 	
 	import mx.core.ISelectableList;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
+	import mx.core.mx_internal;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	import mx.events.FlexEvent;
@@ -39,7 +41,8 @@ package ws.tink.spark.containers
 	import ws.tink.spark.layouts.supportClasses.AnimationNavigatorLayoutBase;
 	import ws.tink.spark.layouts.supportClasses.INavigatorLayout;
 	
-
+	use namespace mx_internal;
+	
 	//--------------------------------------
 	//  Events
 	//--------------------------------------
@@ -126,6 +129,73 @@ package ws.tink.spark.containers
 	{
 		
 		
+		
+		
+		
+		
+		/** 
+		 *  If the item is an IEventDispatcher, watch it for updates.  
+		 *  This method is called by the <code>addItemAt()</code> method, 
+		 *  and when the source is initially assigned.
+		 *
+		 *  @param item The item passed to the <code>addItemAt()</code> method.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 9
+		 *  @playerversion AIR 1.1
+		 *  @productversion Flex 3
+		 */
+		protected function startTrackUpdates( item:IVisualElement ):void
+		{
+			if( item && ( item is IEventDispatcher ) )
+				IEventDispatcher( item ).addEventListener( PropertyChangeEvent.PROPERTY_CHANGE, itemUpdateHandler, false, 0, true );
+		}
+		
+		/** 
+		 *  If the item is an IEventDispatcher, stop watching it for updates.
+		 *  This method is called by the <code>removeItemAt()</code> and 
+		 *  <code>removeAll()</code> methods, and before a new
+		 *  source is assigned.
+		 *
+		 *  @param item The item passed to the <code>removeItemAt()</code> method.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 9
+		 *  @playerversion AIR 1.1
+		 *  @productversion Flex 3
+		 */
+		protected function stopTrackUpdates( item:IVisualElement ):void
+		{
+			if( item && item is IEventDispatcher )
+				IEventDispatcher( item ).removeEventListener( PropertyChangeEvent.PROPERTY_CHANGE, itemUpdateHandler );    
+		}
+		
+		/**
+		 *  Called when any of the contained items in the list dispatches a
+		 *  <code>PropertyChangeEvent</code>.
+		 *  Wraps it in a <code>CollectionEventKind.UPDATE</code> object.
+		 *
+		 *  @param event The event object for the <code>PropertyChangeEvent</code>.
+		 *  
+		 *  @langversion 3.0
+		 *  @playerversion Flash 9
+		 *  @playerversion AIR 1.1
+		 *  @productversion Flex 3
+		 */    
+		protected function itemUpdateHandler( event:PropertyChangeEvent ):void
+		{
+			internalDispatchEvent( CollectionEventKind.UPDATE, event );
+			// need to dispatch object event now
+			if ( hasEventListener(PropertyChangeEvent.PROPERTY_CHANGE ) )
+			{
+				var objEvent:PropertyChangeEvent = PropertyChangeEvent( event.clone() );
+				var index:uint = getItemIndex( event.target );
+				objEvent.property = index.toString() + "." + event.property;
+				dispatchEvent(objEvent);
+			}
+		}
+		
+		private var _addRemoveDispatch:Boolean = true;
 		
 		//--------------------------------------------------------------------------
 		//
@@ -296,6 +366,11 @@ package ws.tink.spark.containers
 		override public function set mxmlContent( value:Array ):void
 		{
 			super.mxmlContent = value;
+			
+			for each ( var i:Object in value )
+			{
+				startTrackUpdates( i as IVisualElement );
+			}
 			
 			dispatchEvent( new CollectionEvent( CollectionEvent.COLLECTION_CHANGE, false, false, CollectionEventKind.RESET, -1, -1, toArray() ) );
 		}
@@ -507,21 +582,23 @@ package ws.tink.spark.containers
 		 */
 		public function setItemAt( item:Object, index:int ):Object
 		{
-			var result:Object = removeElementAt( index );
-			addElementAt( item as IVisualElement,index );
+			_addRemoveDispatch = false;
+			var oldItem:IVisualElement = removeElementAt( index );
+			addElementAt( item as IVisualElement, index );
+			_addRemoveDispatch = true;
 			
 			if( hasEventListener( CollectionEvent.COLLECTION_CHANGE ) )
 			{
 				var propertyChangeEvent:PropertyChangeEvent = new PropertyChangeEvent( PropertyChangeEvent.PROPERTY_CHANGE );
 				propertyChangeEvent.kind = PropertyChangeEventKind.UPDATE;
-				propertyChangeEvent.oldValue = result;
+				propertyChangeEvent.oldValue = oldItem;
 				propertyChangeEvent.newValue = item;
 				propertyChangeEvent.property = index;
 					
 				internalDispatchEvent( CollectionEventKind.REPLACE, propertyChangeEvent, index );
 			}
 			
-			return result;
+			return oldItem;
 		}
 		
 		/**
@@ -689,7 +766,11 @@ package ws.tink.spark.containers
 		override public function addElementAt( element:IVisualElement, index:int ):IVisualElement
 		{
 			super.addElementAt( element, index );
-			internalDispatchEvent( CollectionEventKind.ADD, element, index );
+			startTrackUpdates( element );
+			
+			if( _addRemoveDispatch )
+				internalDispatchEvent( CollectionEventKind.ADD, element, index );
+			
 			return element;
 		}
 		
@@ -703,7 +784,9 @@ package ws.tink.spark.containers
 		 */
 		override public function removeAllElements():void
 		{
+			_addRemoveDispatch = false;
 			super.removeAllElements();
+			_addRemoveDispatch = true;
 			internalDispatchEvent( CollectionEventKind.RESET );
 		}
 		
@@ -715,10 +798,14 @@ package ws.tink.spark.containers
 		 *  @playerversion AIR 1.5
 		 *  @productversion Flex 4
 		 */
-		override public function removeElementAt(index:int):IVisualElement
+		override public function removeElementAt( index:int ):IVisualElement
 		{
 			var removed:IVisualElement = super.removeElementAt( index );
-			internalDispatchEvent( CollectionEventKind.REMOVE, removed, index );
+			stopTrackUpdates( removed );
+			
+			if( _addRemoveDispatch )
+				internalDispatchEvent( CollectionEventKind.REMOVE, removed, index );
+			
 			return removed;
 		}
 		
