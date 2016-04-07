@@ -26,6 +26,7 @@ package ws.tink.spark.layouts
 	import mx.core.ISelectableList;
 	import mx.core.IVisualElement;
 	import mx.core.mx_internal;
+	import mx.events.EffectEvent;
 	
 	import spark.components.supportClasses.ButtonBarBase;
 	import spark.components.supportClasses.GroupBase;
@@ -849,6 +850,7 @@ package ws.tink.spark.layouts
 					{
 						element.setLayoutBoundsPosition( elementPos, 0 );
 					}
+
 					elementPos += _buttonLayout._buttonSizes[ i ];
 				}
 				
@@ -1164,12 +1166,14 @@ package ws.tink.spark.layouts
 			if( element is DisplayObject ) DisplayObject( element ).scrollRect = null;
 		}
 		
+		
 	}
 }
 import flash.geom.Matrix;
 
 import mx.core.ILayoutElement;
 import mx.core.IVisualElement;
+import mx.events.EffectEvent;
 
 import spark.components.supportClasses.GroupBase;
 import spark.layouts.supportClasses.LayoutBase;
@@ -1391,6 +1395,93 @@ internal class ButtonLayout extends LayoutBase
 		_parentLayout = parentLayout;
 	}
 	
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  target
+	//----------------------------------
+	
+	override public function set target( value:GroupBase ):void
+	{
+		_totalSize = 0;
+		_buttonSizes.splice( 0, _buttonSizes.length );
+		super.target = value;
+	}
+	
+	
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	
+	public function invalidateTargetDisplayList() : void
+	{
+		if( !target ) return;
+		target.invalidateDisplayList();
+	}
+	
+	public function invalidateTargetSize() : void
+	{
+		if( !target ) return;
+		target.invalidateSize();
+	}
+	
+	
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 *  @inheritDoc
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.5
+	 *  @productversion Flex 4
+	 */
+	override public function addEventListener( type:String, listener:Function, useCapture:Boolean = false, priority:int = 0, useWeakReference:Boolean = false ):void
+	{
+		if( type == EffectEvent.EFFECT_START || type == EffectEvent.EFFECT_END && !hasEventListener( type ) )
+			_parentLayout.addEventListener( type, parentLayout_effectEvent, false, 0, true );
+		
+		super.addEventListener( type, listener, useCapture, priority, useWeakReference );
+	}
+	
+	/**
+	 *  @inheritDoc
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.5
+	 *  @productversion Flex 4
+	 */
+	override public function removeEventListener( type:String, listener:Function, useCapture:Boolean = false ):void
+	{
+		super.removeEventListener( type, listener, useCapture );
+		
+		if( type == EffectEvent.EFFECT_START || type == EffectEvent.EFFECT_END && !hasEventListener( type ) )
+			_parentLayout.removeEventListener( type, parentLayout_effectEvent, false );
+	}
+	
+	/**
+	 *  @inheritDoc
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.5
+	 *  @productversion Flex 4
+	 */
 	override public function measure():void
 	{
 		if( !_parentLayout.target ) return;
@@ -1439,24 +1530,7 @@ internal class ButtonLayout extends LayoutBase
 		}
 	}
 	
-	public function invalidateTargetDisplayList() : void
-	{
-		if( !target ) return;
-		target.invalidateDisplayList();
-	}
 	
-	public function invalidateTargetSize() : void
-	{
-		if( !target ) return;
-		target.invalidateSize();
-	}
-	
-	override public function set target( value:GroupBase ):void
-	{
-		_totalSize = 0;
-		_buttonSizes.splice( 0, _buttonSizes.length );
-		super.target = value;
-	}
 	override public function updateDisplayList( unscaledWidth:Number, unscaledHeight:Number ):void
 	{
 		super.updateDisplayList( unscaledWidth, unscaledHeight );
@@ -1493,4 +1567,19 @@ internal class ButtonLayout extends LayoutBase
 		_parentLayout.invalidateElementSizes();
 	}
 	
+	
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Event handlers
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 *  @private
+	 */	
+	private function parentLayout_effectEvent( event:EffectEvent ):void
+	{
+		dispatchEvent( event );
+	}
 }
