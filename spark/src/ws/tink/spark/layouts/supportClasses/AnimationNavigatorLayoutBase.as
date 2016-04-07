@@ -337,6 +337,9 @@ package ws.tink.spark.layouts.supportClasses
 			animation.stop();
 			animation.motionPaths = new <MotionPath>[ new SimpleMotionPath( "animationIndex", from, to ) ];
 			animation.play();
+			
+			if( hasEventListener( EffectEvent.EFFECT_START ) )
+				dispatchEvent( new EffectEvent( EffectEvent.EFFECT_START ) );
 		}
 		
 		/**
