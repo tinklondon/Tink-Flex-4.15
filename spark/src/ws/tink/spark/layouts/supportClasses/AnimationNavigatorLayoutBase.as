@@ -361,7 +361,8 @@ package ws.tink.spark.layouts.supportClasses
 //			updateIndicesInView();
 			invalidateTargetDisplayList();
 			
-			dispatchEvent( new EffectEvent( EffectEvent.EFFECT_END ) );
+			if( hasEventListener( EffectEvent.EFFECT_END ) )
+				dispatchEvent( new EffectEvent( EffectEvent.EFFECT_END ) );
 		}
 		
 		
