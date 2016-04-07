@@ -1,16 +1,33 @@
 package ws.tink.spark.layouts.supportClasses
 {
-	import mx.events.Request;
+	import mx.events.EffectEvent;
 	
 	import spark.effects.animation.Animation;
 	import spark.effects.animation.MotionPath;
 	import spark.effects.animation.SimpleMotionPath;
 	import spark.effects.easing.IEaser;
 	import spark.effects.easing.Linear;
-	import spark.effects.easing.Sine;
 	
 	import ws.tink.spark.controls.supportClasses.AnimationTarget;
 
+	
+	
+	//--------------------------------------
+	//  Events
+	//--------------------------------------
+	
+	/**
+	 *  @eventType mx.events.EffectEvent.EFFECT_END
+	 *  
+	 *  @langversion 3.0
+	 *  @playerversion Flash 10
+	 *  @playerversion AIR 1.5
+	 *  @productversion Flex 4
+	 */
+	[Event(name="effectEnd", type="mx.events.EffectEvent")]
+
+	
+	
 	/**
 	 *  A AnimationNavigatorLayoutBase class is a base class for navigator layouts
 	 *  that can animation between indices.
@@ -343,6 +360,8 @@ package ws.tink.spark.layouts.supportClasses
 			_animationValue = animation.currentValue[ "animationIndex" ];
 //			updateIndicesInView();
 			invalidateTargetDisplayList();
+			
+			dispatchEvent( new EffectEvent( EffectEvent.EFFECT_END ) );
 		}
 		
 		
