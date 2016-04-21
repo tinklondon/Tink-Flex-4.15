@@ -1212,21 +1212,21 @@ package ws.tink.spark.containers
 			
 			if( type == CollectionEvent.COLLECTION_CHANGE &&
 				hasEventListener( CollectionEvent.COLLECTION_CHANGE ) &&
-				currentContentGroup.hasEventListener( CollectionEvent.COLLECTION_CHANGE ) )
+				!currentContentGroup.hasEventListener( CollectionEvent.COLLECTION_CHANGE ) )
 			{
 				currentContentGroup.addEventListener( CollectionEvent.COLLECTION_CHANGE, onBubbleContentGroupEvent, false, 0, true );
 			}
 			
 			if( type == IndexChangeEvent.CHANGE &&
 				hasEventListener( IndexChangeEvent.CHANGE ) &&
-				currentContentGroup.hasEventListener( IndexChangeEvent.CHANGE ) )
+				!currentContentGroup.hasEventListener( IndexChangeEvent.CHANGE ) )
 			{
 				currentContentGroup.addEventListener( IndexChangeEvent.CHANGE, onBubbleContentGroupEvent, false, 0, true );
 			}
 			
 			if( type == FlexEvent.VALUE_COMMIT &&
 				hasEventListener( FlexEvent.VALUE_COMMIT ) &&
-				currentContentGroup.hasEventListener( FlexEvent.VALUE_COMMIT ) )
+				!currentContentGroup.hasEventListener( FlexEvent.VALUE_COMMIT ) )
 			{
 				currentContentGroup.addEventListener( FlexEvent.VALUE_COMMIT, onBubbleContentGroupEvent, false, 0, true );
 			}
