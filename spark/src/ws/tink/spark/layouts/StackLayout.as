@@ -409,7 +409,7 @@ package ws.tink.spark.layouts
 			
 			if( _stackIndex != selectedIndex )
 			{
-				if( effect && _bitmapFrom )
+				if( effect && _bitmapFrom && unscaledWidth && unscaledHeight )
 				{
 					// Validate the selectedElement before drowing.
 					if( _selectedElement is IInvalidating )
